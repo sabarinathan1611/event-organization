@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <a href="{{ url_for('views.create_event') }}" class="btn btn-primary">Create New Event</a>
+        <a href="{{ url_for('views.list_event') }}" class="btn btn-primary">Show Events</a>
+
+       </div>
+</body>
+</html>
