@@ -13,10 +13,10 @@
     <nav class="navbar">
         <div class="event-name">
             <div class="event-logo">
-                <img src="static/assets/logos/dark-logo.png" alt="">
+                <img src="{{ url_for('static', filename='img/'+mainevent.event_logo) }}" alt="">
                 <!-- <img src="static/assets/logos/light-logo.png" alt=""> -->
             </div>
-            <p class="name">EventName</p>
+            <p class="name">{{mainevent.event_name}}</p>
         </div>
         <div class="menu_btn">
             <span class="menu-line"></span>
@@ -46,11 +46,10 @@
     <section  class="home">
         <div class="host-name">
             <h1 class="college-name">
-                Panimalar engineering college
-            </h1>
+{{mainevent.clg_name}}            </h1>
             <h2 class="department">
                 department of <br>
-                Information technology
+                {{mainevent.dept_name}}
             </h2>
         </div>
         <div class="timimg-box" id="countdown">
@@ -103,7 +102,8 @@
                     {{ event.description }}
                 </div>
                 <div class="action-container">
-                    <a href="/event-view" class="action view"><i class="fas fa-eye"></i> view</a>
+
+                    <a  href="{{ url_for('views.event_view', event_id=event.id) }}" class="action view"><i class="fas fa-eye"></i> view</a>
                     <a href="/register" class="action register"><i class="fas fa-user-plus"></i> register</a>
                 </div>
             </div>

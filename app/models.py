@@ -36,10 +36,13 @@ class Ticket(db.Model):
     year=db.Column(db.String(100), nullable=False)
     date = db.Column(db.DateTime(timezone=True), default=func.now())
 
+
 class Event_basic(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    event_name=db.Column(db.String(100))
-    clg_name=db.Column(db.String(100))
-    dept_name=db.Column(db.String(100))
-    club=db.Column(db.String(100))
-    event_logo=db.Column(db.String(100), nullable=False)
+    event_name = db.Column(db.String(100))
+    clg_name = db.Column(db.String(100))
+    dept_name = db.Column(db.String(100))
+    club = db.Column(db.String(100))
+    event_logo = db.Column(db.String(100), nullable=False)
+    coordinator_name = db.Column(db.String(50), nullable=False)
+    date = db.Column(db.DateTime(timezone=True), default=func.now())

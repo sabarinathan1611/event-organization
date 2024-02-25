@@ -7,7 +7,7 @@ import os
 from werkzeug.utils import secure_filename
 from flask import current_app as app
 import uuid
-from .models import Event
+from .models import Event,Event_basic
 from sqlalchemy.exc import SQLAlchemyError
 
 views = Blueprint('views', __name__)
@@ -15,14 +15,18 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 @views.route('/')
 def home():
-	all_events = Event.query.all()
-	return render_template('index.html',events=all_events)
+    mainevent=Event_basic.query.get_or_404(1)
+    all_events = Event.query.all()
+    return render_template('index.html',events=all_events,mainevent=mainevent)
 
-@views.route('/event-view',methods=['GET'])
-def event_view():
-	return render_template('event-view.html')
+@views.route('/event-view/<int:event_id>',methods=['GET','POST'])
+def event_view(event_id):
+    event=Event.query.get_or_404(event_id)
+    return render_template('event-view.html', event=event)
+
 @views.route('/admin')
 @login_required
 def admin():
@@ -148,3 +152,45 @@ def delete_event(event_id):
         return e
 
     return redirect(url_for('views.list_event'))
+
+@views.route('/create_event_basic', methods=['POST','GET'])
+def create_event_basic():
+    if request.method == 'POST':
+        try:
+            event_name = request.form['event_name']
+            clg_name = request.form['clg_name']
+            dept_name = request.form['dept_name']
+            club = request.form['club']
+            coordinator_name = request.form['coordinator_name']
+            # Parse the date from the form and convert it to a datetime object
+            date_str = request.form['date']
+            date = datetime.strptime(date_str, '%Y-%m-%d')
+            
+            # Handle file upload for event logo
+            if 'event_logo' in request.files:
+                event_logo = request.files['event_logo']
+                if event_logo.filename != '':
+                    filename = str(uuid.uuid4()) + "_" + secure_filename(event_logo.filename)
+                    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                    event_logo.save(file_path)
+                else:
+                    filename = None
+            else:
+                filename = None
+
+            # Create a new Event_basic instance and add it to the database
+            new_event = Event_basic(event_name=event_name, clg_name=clg_name, dept_name=dept_name,
+                                    club=club, event_logo=filename, coordinator_name=coordinator_name,
+                                    date=date)
+            db.session.add(new_event)
+            db.session.commit()
+
+            return redirect('/')
+        except SQLAlchemyError as e:
+            print(str(e))
+            db.session.rollback()
+            return "Error occurred while creating the event."
+        finally:
+            db.session.close()
+
+    return render_template('event_details.html')
