@@ -32,7 +32,6 @@ def login():
             return redirect(url_for('views.admin'))  
     
     return render_template('login.html')
-
 @auth.route('/register', methods=['POST', 'GET'])
 def register():
     if request.method == 'POST':
@@ -41,8 +40,6 @@ def register():
         tm_name = request.form.get('tm_name')
         tl_roll = request.form.get('tl_roll')
         tm_roll = request.form.get('tm_roll')
-        tl_class = request.form.get('tl_class')
-        tm_class = request.form.get('tm_class')
         tl_section = request.form.get('tl_section')
         tm_section = request.form.get('tm_section')
         tl_email = request.form.get('tl_email')
@@ -64,14 +61,22 @@ def register():
         print("Team Member Name:", tm_name)
         print("Team Leader Roll:", tl_roll)
         print("Team Member Roll:", tm_roll)
-        print("Team Leader Class:", tl_class)
-        print("Team Member Class:", tm_class)
         print("Team Leader Section:", tl_section)
         print("Team Member Section:", tm_section)
         print("Team Leader Email:", tl_email)
         print("Team Member Email:", tm_email)
         print("Selected Event:", event)
         
+        # Check if team leader has already registered for the event
+        team_leader_event = IEEEEvent.query.filter_by(team_leader_roll=tl_roll, event_type=event).first()
+        if team_leader_event:
+            return "Team leader has already registered for this event."
+
+        # Check if team member has already registered for the event
+        team_member_event = IEEEEvent.query.filter_by(team_member_roll=tm_roll, event_type=event).first()
+        if team_member_event:
+            return "Team member has already registered for this event."
+
         # Check if team leader has already registered for two events
         team_leader_events = IEEEEvent.query.filter(IEEEEvent.team_leader_roll == tl_roll).count()
         if team_leader_events >= 2:
@@ -88,8 +93,6 @@ def register():
             team_member_name=tm_name,
             team_leader_roll=tl_roll,
             team_member_roll=tm_roll,
-            team_leader_class=tl_class,
-            team_member_class=tm_class,
             team_leader_section=tl_section,
             team_member_section=tm_section,
             team_leader_email=tl_email,

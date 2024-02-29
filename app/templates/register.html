@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Registration Form</title>
-    <link rel="stylesheet" href="static/css/ticket.css" />
+    <link rel="stylesheet" href="\static\css\ticket.css" />
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" crossorigin="anonymous"/> -->
     <link
       rel="stylesheet"
@@ -275,6 +275,7 @@
                 >
                 <input
                   type="text"
+                  name="tl_name"
                   class="tl-name"
                   placeholder="Team Leader name"
                   required
@@ -287,6 +288,7 @@
                 <input
                   type="text"
                   class="tm-name"
+                  name="tm_name"
                   placeholder="Team Member name"
                   required
                 />
@@ -300,6 +302,7 @@
                 >
                 <input
                   type="text"
+                  name="tl_roll"
                   class="tl-roll roll-no"
                   placeholder="Team Leader Roll no"
                   required
@@ -312,32 +315,9 @@
                 >
                 <input
                   type="text"
+                  name="tm_roll"
                   class="tm-roll roll-no"
                   placeholder="Team Member roll no"
-                  required
-                />
-              </div>
-            </div>
-            <div class="tm-fields">
-              <div class="tl-roll-div input">
-                <label
-                  >Enter Team Leader Class <span class="require">*</span></label
-                >
-                <input
-                  type="text"
-                  class="tl-roll class"
-                  placeholder="Team Leader Class"
-                  required
-                />
-              </div>
-              <div class="tm-roll-div input">
-                <label
-                  >Enter Team Member Class <span class="require">*</span></label
-                >
-                <input
-                  type="text"
-                  class="tm-roll class"
-                  placeholder="Team Member Class"
                   required
                 />
               </div>
@@ -350,6 +330,7 @@
                 </label>
                 <input
                   type="text"
+                  name="tl_section"
                   class="tl-roll class"
                   placeholder="Team Leader Class"
                   required
@@ -362,6 +343,7 @@
                 >
                 <input
                   type="text"
+                  name="tm_section"
                   class="tm-roll class"
                   placeholder="Team Member Class"
                   required
@@ -374,6 +356,7 @@
                   >Enter Team Leader Email <span class="require">*</span></label
                 >
                 <input
+                  name="tl_email"
                   type="text"
                   class="tl-roll class"
                   placeholder="Team Leader email"
@@ -385,6 +368,7 @@
                   >Enter Team Member Email <span class="require">*</span></label
                 >
                 <input
+                  name="tm_email"
                   type="text"
                   class="tm-roll class"
                   placeholder="Team Member email"
@@ -518,58 +502,5 @@
       </div>
       <!-- <div class="footer">Contact: <i class="fas fa-phone"></i></div> -->
     </main>
-
-    <!-- <script>
-      const all_btns = document.querySelectorAll(".action-menu");
-      const all_pages = document.querySelectorAll(".page-action");
-      const clostBtns = document.querySelectorAll(".close");
-      let mainDiv = document.querySelector(".main-div");
-      let body = document.querySelector("body");
-      clostBtns.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          all_pages.forEach((page) => {
-            page.style.display = "none";
-          });
-          mainDiv.classList.remove("active");
-          body.classList.remove("popup-open");
-        });
-      });
-
-      all_btns.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          let index = btn.getAttribute("index");
-          showPage(index);
-        });
-      });
-
-      function showPage(index) {
-        all_pages.forEach((page) => {
-          let pageIndex = page.getAttribute("index");
-          if (index == pageIndex) {
-            page.style.display = "block";
-          } else {
-            page.style.display = "none";
-          }
-          mainDiv.classList.add("active");
-          body.classList.add("popup-open");
-        });
-      }
-
-      let submitBtn = document.querySelector(".submit-btn");
-      submitBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        let roll_no = document.querySelectorAll(".roll-no");
-        roll_no.forEach((roll) => {
-          if (roll) {
-            console.log(roll.slice(0, 9));
-            if (roll.value.slice(0, 9).toLowerCase() === "2023pecit") {
-              return true;
-            } else {
-              alert("Incorrect Roll No Format");
-            }
-          }
-        });
-      });
-    </script> -->
   </body>
 </html>
