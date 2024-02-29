@@ -50,3 +50,17 @@ class Event_basic(db.Model):
     event_logo = db.Column(db.String(100), nullable=False)
     coordinator_name = db.Column(db.String(50), nullable=False)
     date = db.Column(db.DateTime(timezone=True), default=func.now())
+    
+class IEEEEvent(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    team_leader_name = db.Column(db.String(100), nullable=False)
+    team_member_name = db.Column(db.String(100), nullable=False)
+    team_leader_roll = db.Column(db.String(20), nullable=False)
+    team_member_roll = db.Column(db.String(20), nullable=False)
+    team_leader_class = db.Column(db.String(20), nullable=False)
+    team_member_class = db.Column(db.String(20), nullable=False)
+    team_leader_section = db.Column(db.String(20), nullable=False)
+    team_member_section = db.Column(db.String(20), nullable=False)
+    team_leader_email = db.Column(db.String(100), nullable=False)
+    team_member_email = db.Column(db.String(100), nullable=False)
+    event_type = db.Column(db.String(50), nullable=False)

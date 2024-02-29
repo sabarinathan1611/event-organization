@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, jsonify, redirect, url_fo
 from flask_login import login_required, login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
-from .models import Admin,Ticket,Event
+from .models import Admin,Ticket,IEEEEvent
 from flask import current_app as app 
 from collections import defaultdict
 auth = Blueprint('auth', __name__)
@@ -36,54 +36,72 @@ def login():
 @auth.route('/register', methods=['POST', 'GET'])
 def register():
     if request.method == 'POST':
+        # Fetching form data
+        tl_name = request.form.get('tl_name')
+        tm_name = request.form.get('tm_name')
+        tl_roll = request.form.get('tl_roll')
+        tm_roll = request.form.get('tm_roll')
+        tl_class = request.form.get('tl_class')
+        tm_class = request.form.get('tm_class')
+        tl_section = request.form.get('tl_section')
+        tm_section = request.form.get('tm_section')
+        tl_email = request.form.get('tl_email')
+        tm_email = request.form.get('tm_email')
         
-        name = request.form['name']
-        email = request.form['email']
-        event_name = request.form['event_name']
-        dept = request.form['dept']
-        team_name = request.form['team_name']
-        team_members = request.form['team_members']
-        clg = request.form['clg']
-        year = request.form['year']
+        # Retrieving the selected radio button value
+        event = None
+        if 'first' in request.form:
+            event = request.form.get('first')
+        elif 'second' in request.form:
+            event = request.form.get('second')
+        elif 'third' in request.form:
+            event = request.form.get('third')
+        elif 'fourth' in request.form:
+            event = request.form.get('fourth')
+        
+        # Debug print all form values
+        print("Team Leader Name:", tl_name)
+        print("Team Member Name:", tm_name)
+        print("Team Leader Roll:", tl_roll)
+        print("Team Member Roll:", tm_roll)
+        print("Team Leader Class:", tl_class)
+        print("Team Member Class:", tm_class)
+        print("Team Leader Section:", tl_section)
+        print("Team Member Section:", tm_section)
+        print("Team Leader Email:", tl_email)
+        print("Team Member Email:", tm_email)
+        print("Selected Event:", event)
+        
+        # Check if team leader has already registered for two events
+        team_leader_events = IEEEEvent.query.filter(IEEEEvent.team_leader_roll == tl_roll).count()
+        if team_leader_events >= 2:
+            return "Team leader has already registered for two events."
 
-        # Find the event by event_name
-        event = Event.query.filter_by(event_name=event_name).first()
-        if not event:
-            return "Error: Event not found."
+        # Check if team member has already registered for two events
+        team_member_events = IEEEEvent.query.filter(IEEEEvent.team_member_roll == tm_roll).count()
+        if team_member_events >= 2:
+            return "Team member has already registered for two events."
 
-        # Get the event_id
-        event_id = event.id
-
-        # Split the team members' roll numbers and store them in a list
-        team_members_rollnum_list = [roll.strip() for roll in team_members.split(',')]
-
-        # Create a dictionary to track the number of events each team member has registered for
-        member_event_count = defaultdict(int)
-
-        # Check if the team members are already registered for the same event
-        for member_rollnum in team_members_rollnum_list:
-            existing_ticket = Ticket.query.filter_by(event_id=event_id, rollnum=member_rollnum).first()
-            if existing_ticket:
-                return "Error: One of the team members is already registered for this event."
-
-            # Increment the event count for the current team member
-            member_event_count[member_rollnum] += 1
-
-        # Check if any team member has already registered for two events
-        for member_rollnum, count in member_event_count.items():
-            if count >= 2:
-                return "Error: {} has already registered for the maximum number of events.".format(member_rollnum)
-
-        # Create Ticket objects for each team member and save them to the database
-        for member_rollnum in team_members_rollnum_list:
-            ticket = Ticket(rollnum=member_rollnum, name=name, email=email, event_id=event_id,
-                            dept=dept, team_name=team_name, team_members=team_members,
-                            clg=clg, year=year)
-            db.session.add(ticket)
-
+        # Creating a new Event object and adding it to the database session
+        new_event = IEEEEvent(
+            team_leader_name=tl_name,
+            team_member_name=tm_name,
+            team_leader_roll=tl_roll,
+            team_member_roll=tm_roll,
+            team_leader_class=tl_class,
+            team_member_class=tm_class,
+            team_leader_section=tl_section,
+            team_member_section=tm_section,
+            team_leader_email=tl_email,
+            team_member_email=tm_email,
+            event_type=event
+        )
+        db.session.add(new_event)
         db.session.commit()
-        return "Success: Tickets registered successfully."
 
+        return redirect(url_for('views.home'))
+
+    
     return render_template('register.html')
 
 @auth.route('/logout', methods=['GET', 'POST'])
