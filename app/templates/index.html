@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PEC - Events</title>
-    <link rel="icon" type="image/png" href="static/assets/logos/light-logo.png">    
+    <link rel="icon" type="image/png" href="static/assets/logos/light-logo.png">
     <link rel="stylesheet" href="static/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
@@ -58,34 +58,15 @@
             <div class="inner-div mins">0 mins</div>
             <div class="inner-div secs">0 secs</div>
         </div>
-        <div class="count-box" id="countBox">
-            <div class="counters_title">Participation Count</div>
-            <div class="counters">
-                <div class="inner-count">
-                    <p class="count_title">Registrations</p>
-                    <h1 class="count">100+</h1>
-                </div>
-                <div class="inner-count">
-                    <p class="count_title">Events</p>
-                    <h1 class="count">4+</h1>
-                </div>
-                <div class="inner-count">
-                    <p class="count_title">Colleges</p>
-                    <h1 class="count">25+</h1>
-                </div>
-                <div class="inner-count">
-                    <p class="count_title">Departments</p>
-                    <h1 class="count">15+</h1>
-                </div>
-            </div>
+
         </div>
     </section>
     <section class="events" id="events">
         <div class="header">
             <div class="cursive">
-                <span class="inner-line"></span> 
-                Events 
-                <span class="inner-line"></span> 
+                <span class="inner-line"></span>
+                Events
+                <span class="inner-line"></span>
             </div>
             <div class="title">Events</div>
         </div>
@@ -99,7 +80,9 @@
                     </div>
                 </div>
                 <div class="event-description">
-                    {{ event.description }}
+                    {% for description in event.description.split('/') %} {{
+                        description.strip() }} <br />
+                        {% endfor %}
                 </div>
                 <div class="action-container">
 

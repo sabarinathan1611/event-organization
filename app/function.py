@@ -1,35 +1,36 @@
-#function.py
-from flask_mail import Message
-from flask import url_for,render_template
-from . import mail
-import os
-from . import mail
-# from .models import Admin
-from . import db
-from werkzeug.security import generate_password_hash
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
-def send_email(to, subject, html):
-    sender='kklimited1013@gmail.com'
-    print("SENDER MAIL: ",sender)
-    msg = Message(subject, sender=sender, recipients=[to])
-    msg.html = html
-    mail.send(msg)
+def send_mail(email, subject, body):
+    sender_email = "ieee.events.pec.it@gmail.com"
+    receiver_email = email
+    password = 'neaq qucv zqia mhcq'  # Use an App Password or enable Less Secure Apps
+
+    # Create the email message
+    message = MIMEMultipart()
+    message['From'] = sender_email
+    message['To'] = receiver_email
+    message['Subject'] = subject
+
+    # Attach the HTML body to the message
+    message.attach(MIMEText(body, 'html'))
+
+    try:
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+            server.login(sender_email, password)
+            server.sendmail(sender_email, receiver_email, message.as_string())
+        print('Email sent successfully!')
+    except Exception as e:
+        print(f'An error occurred: {str(e)}')
+
+
+send_mail('vsabarinathan1611@gmail.com','TEST','html')
 
 
 
 
 
-# def create_admi(username,password):
-
-#     admin = Admin.query.filter_by(username='username').first()
-#     if not admin:
-        
-#         admin_password = password
-#         hashed_password = generate_password_hash(admin_password)
-        
-#         new_admin = Admin(username=username,  password=hashed_password)
-#         db.session.add(new_admin)
-#         db.session.commit()
 
 
         

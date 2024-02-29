@@ -3,17 +3,42 @@ from flask_login import login_required, login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from .models import Admin,Ticket,IEEEEvent
-from flask import current_app as app 
+from flask import current_app as app
 from collections import defaultdict
-from .function import send_email
+
 auth = Blueprint('auth', __name__)
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
+def send_mail(email, subject, body):
+    sender_email = "ieee.events.pec.it@gmail.com"
+    receiver_email = email
+    password = 'neaq qucv zqia mhcq'  # Use an App Password or enable Less Secure Apps
+
+    # Create the email message
+    message = MIMEMultipart()
+    message['From'] = sender_email
+    message['To'] = receiver_email
+    message['Subject'] = subject
+
+    # Attach the HTML body to the message
+    message.attach(MIMEText(body, 'html'))
+
+    try:
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+            server.login(sender_email, password)
+            server.sendmail(sender_email, receiver_email, message.as_string())
+        print('Email sent successfully!')
+    except Exception as e:
+        print(f'An error occurred: {str(e)}')
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        
+
         # Check if the admin exists in the database
         admin = Admin.query.filter_by(id=1).first()
         if admin:
@@ -30,8 +55,8 @@ def login():
             db.session.add(new_admin)
             db.session.commit()
             login_user(new_admin)
-            return redirect(url_for('views.admin'))  
-    
+            return redirect(url_for('views.admin'))
+
     return render_template('login.html')
 @auth.route('/register', methods=['POST', 'GET'])
 def register():
@@ -45,7 +70,7 @@ def register():
         tm_section = request.form.get('tm_section')
         tl_email = request.form.get('tl_email')
         tm_email = request.form.get('tm_email')
-        
+
         # Retrieving the selected radio button value
         event = None
         if 'first' in request.form:
@@ -56,7 +81,7 @@ def register():
             event = request.form.get('third')
         elif 'fourth' in request.form:
             event = request.form.get('fourth')
-        
+
         # Debug print all form values
         print("Team Leader Name:", tl_name)
         print("Team Member Name:", tm_name)
@@ -67,7 +92,7 @@ def register():
         print("Team Leader Email:", tl_email)
         print("Team Member Email:", tm_email)
         print("Selected Event:", event)
-        
+
         # Check if team leader has already registered for the event
         team_leader_event = IEEEEvent.query.filter_by(team_leader_roll=tl_roll, event_type=event).first()
         if team_leader_event:
@@ -169,14 +194,15 @@ Best regards,</p>
         """
         subject="Thank You for Registering!"
         to=tl_email
-        send_email(html=html,subject=subject,to=to)
+        send_mail(email=to,subject=subject,body=html)
+
 
         return redirect(url_for('views.home'))
 
-    
+
     return render_template('register.html')
 
 @auth.route('/logout', methods=['GET', 'POST'])
 def logout():
     logout_user()
-    return redirect(url_for('auth.login'))
+    return redirect(url_for('views.home'))

@@ -7,8 +7,9 @@ import os
 from werkzeug.utils import secure_filename
 from flask import current_app as app
 import uuid
-from .models import Event,Event_basic
+from .models import Event,Event_basic,IEEEEvent
 from sqlalchemy.exc import SQLAlchemyError
+
 
 views = Blueprint('views', __name__)
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -30,7 +31,8 @@ def event_view(event_id):
 @views.route('/admin')
 @login_required
 def admin():
-	return render_template('admin.html')
+    events = IEEEEvent.query.all()
+    return render_template('admin.html',events=events)
 
 from datetime import datetime, time
 
@@ -40,6 +42,7 @@ from datetime import datetime, time
 @login_required
 def create_event():
     if request.method == 'POST':
+        images1_filename = None
         coordinator_name = request.form['coordinator_name']
         event_name = request.form['event_name']
         description = request.form['description']
@@ -49,11 +52,11 @@ def create_event():
         number = request.form['number']
         start_time_str = request.form['start_time']
         end_time_str = request.form['end_time']
-        
+
         # Convert string time to datetime.time objects
         start_time = datetime.strptime(start_time_str, '%H:%M').time() if start_time_str else None
         end_time = datetime.strptime(end_time_str, '%H:%M').time() if end_time_str else None
-        
+
         if 'images1' in request.files:
             images1 = request.files['images1']
             if images1 and allowed_file(images1.filename):
@@ -66,37 +69,28 @@ def create_event():
                 images2_filename = secure_filename(str(uuid.uuid4()) + "_" + images2.filename)
                 images2.save(os.path.join(app.config['UPLOAD_FOLDER'], images2_filename))
 
-        print("coordinator_name:", coordinator_name)
-        print("event_name:", event_name)
-        print("description:", description)
-        print("date:", date)
-        print("place:", place)
-        print("judge:", judge)
-        print("number:", number)
-        print("start_time:", start_time)
-        print("end_time:", end_time)
-        print("images1 filename:", images1_filename)
-        print("images2 filename:", images2_filename)
-        
+
         # Create and add event to the database
         create = Event(coordinator_name=coordinator_name, event_name=event_name, description=description,
                        date=date, place=place, judge=judge, number=number,
                        start_time=start_time, end_time=end_time,
                        images1=images1_filename, images2=images2_filename)
         db.session.add(create)
-        db.session.commit()  
-        
+        db.session.commit()
+
         return redirect('/list_event')  # Redirect after successful creation
 
     return render_template('event_form.html')
 
 
 @views.route('/list_event')
+@login_required
 def list_event():
 	all_events = Event.query.all()
 	return render_template('list_event.html',events=all_events)
 
 @views.route('/edit_event/<int:event_id>', methods=['GET', 'POST'])
+@login_required
 def edit_event(event_id):
     # Retrieve the event from the database
     event = Event.query.get_or_404(event_id)
@@ -140,17 +134,19 @@ def edit_event(event_id):
 
 
 @views.route('/delete_event/<int:event_id>', methods=['GET', 'POST'])
+@login_required
 def delete_event(event_id):
     try:
         event = Event.query.get_or_404(event_id)
         db.session.delete(event)
         db.session.commit()
-    except SQLAlchemyError as e:  
+    except SQLAlchemyError as e:
         return e
 
     return redirect(url_for('views.list_event'))
 
 @views.route('/create_event_basic', methods=['POST','GET'])
+@login_required
 def create_event_basic():
     if request.method == 'POST':
         try:
@@ -162,7 +158,7 @@ def create_event_basic():
             # Parse the date from the form and convert it to a datetime object
             date_str = request.form['date']
             date = datetime.strptime(date_str, '%Y-%m-%d')
-            
+
             # Handle file upload for event logo
             if 'event_logo' in request.files:
                 event_logo = request.files['event_logo']
