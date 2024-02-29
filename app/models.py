@@ -27,11 +27,15 @@ class Event(db.Model):
     
 class Ticket(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    rollnum=db.Column(db.String(50), nullable=False)
     name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(100), nullable=False)
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
     event = db.relationship('Event', backref=db.backref('event_tickets', lazy=True))
     dept=db.Column(db.String(100), nullable=False)
+    team_name =db.Column(db.String(100), nullable=False)
+    team_members =db.Column(db.String(100), nullable=False)
+    team_members_rollnum=db.Column(db.String(100), nullable=False)
     clg=db.Column(db.String(100), nullable=False)
     year=db.Column(db.String(100), nullable=False)
     date = db.Column(db.DateTime(timezone=True), default=func.now())

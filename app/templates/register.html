@@ -1,97 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ticket</title>
-    <link rel="icon" type="image/png" href="static/assets/logos/light-logo.png">    
-    <link rel="stylesheet" href="static/css/ticket.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.js"></script>
-</head>
-<body>
-    <div class="nav_bar">
-        <div class="nav_title">Ticket to Event</div>
-        <ul class="nav_options">
-            <a href="/"  class="option back" >
-                    <i class="fas fa-arrow-left"></i>
-            </a>
-            <li class="option download" id="downloadImage">
-                <span class="button" >
-                    <i class="fas fa-download"></i>
-                </span>
-            </li>
-            <a href="/" class="option close">
-                <span class="button">
-                    <i class="fas fa-times"></i>
-                </span>
-            </a>
-        </ul>
-    </div>
-    <div class="ticket-page">
-        <div class="ticket-box" id="ticket">
-            <div class="ticket" >
-                <div class="ticket-image">
-                    <img src="static/assets/images/paper presentation.png" alt="">
-                </div>
-                <div class="ticket-details">
-                    <ul class="event-details">
-                        <li class="title">Event Ticket</li>
-                        <li class="highlight sympo_name">Symposium Name</li>
-                        <li class="highlight sympo_title">Symposium</li>
-                    </ul>
-                    <table class="event-info">
-                        <tr>
-                            <td>Paper presentation</td>
-                            <td>21.02.2024</td>
-                        </tr>
-                        <tr>
-                            <td>IT AV hall, IT Block</td>
-                            <td>09:00 AM</td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="ticket-cutter"></div>
-                <div class="ticket-to">
-                    <ul class="student-info">
-                        <li class="list name">Name of student</li>
-                        <li class="list year">year of student</li>
-                        <li class="list dept">Dept of student</li>
-                        <li class="list clg">Clg of student</li>
-                    </ul>
-                    <p class="ticket-number">
-                        <span>Ticket Number</span>
-                        <span>#01AB02</span>
-                    </p>
-                </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register Ticket</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="text-center">Register Ticket</h3>
             </div>
+            <div class="card-body">
+              <form action="{{url_for('auth.register')}}" method="post">
+                <div class="form-group">
+                  <label for="name">Name:</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    name="name"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="email">Email:</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    name="email"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="event_name">Event Name:</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="event_name"
+                    name="event_name"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="dept">Department:</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="dept"
+                    name="dept"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="team_name">Team Name:</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="team_name"
+                    name="team_name"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="team_members">Team Members:</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="team_members"
+                    name="team_members"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="clg">College:</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="clg"
+                    name="clg"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="year">Year:</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="year"
+                    name="year"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="team_members"
+                    >Team Members' Roll Numbers (comma-separated):</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="team_members"
+                    name="team_members"
+                    required
+                  />
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                  Register
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-    <script>
-        // Download as PDF
-        // document.getElementById('downloadPDF').addEventListener('click', function () {
-        //     document.querySelector(".ticket-page").classList.add("active");
-        //     const element = document.getElementById('ticket');
-        //     html2pdf(element);
-        //     setTimeout(() => {
-        //         document.querySelector(".ticket-page").classList.remove("active");
-        //     }, 5000);
-        // });
-
-        document.getElementById('downloadImage').addEventListener('click', function () {
-            document.querySelector(".ticket-page").classList.add("active");
-            const element = document.getElementById('ticket');
-            html2canvas(element).then(canvas => {
-                const image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-                const link = document.createElement('a');
-                link.href = image;
-                link.download = 'ticket_image.png';
-                link.click();
-                document.querySelector(".ticket-page").classList.remove("active");
-            });
-        });
-      </script>       
-</body>
+  </body>
 </html>
