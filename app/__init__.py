@@ -9,10 +9,10 @@ from sqlalchemy import create_engine
 # Initialize SQLAlchemy
 db = SQLAlchemy()
 DB_NAME = "database.db"
-mail = Mail()
+mail = None
 
 def create_app():
-    
+    global mail
     
     app = Flask(__name__, static_folder='static')
     
@@ -26,11 +26,13 @@ def create_app():
     UPLOAD_FOLDER = os.path.join(app.root_path, 'static/img')
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-    MAIL_SERVER = 'smtp.gmail.com'
-    MAIL_PORT = 465
-    MAIL_USE_SSL = True
-    MAIL_USERNAME = ''
-    MAIL_PASSWORD = ''
+    app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+    app.config['MAIL_PORT'] = 465
+    app.config['MAIL_USE_SSL'] = True
+    app.config['MAIL_USERNAME'] = 'kklimited1013@gmail.com'  
+    app.config['MAIL_PASSWORD'] = 'hmupzeoeftrbzmkl' 
+    # Initialize Flask-Mail
+    mail = Mail(app)
     
 
 

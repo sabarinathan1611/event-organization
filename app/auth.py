@@ -5,6 +5,7 @@ from . import db
 from .models import Admin,Ticket,IEEEEvent
 from flask import current_app as app 
 from collections import defaultdict
+from .function import send_email
 auth = Blueprint('auth', __name__)
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -101,6 +102,74 @@ def register():
         )
         db.session.add(new_event)
         db.session.commit()
+        html = f"""
+ <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Email Verification</title>
+            <style>
+                body {{
+                    font-family: Arial, sans-serif;
+                    background-color: #f4f4f4;
+                    margin: 0;
+                    padding: 0;
+                }}
+                .container {{
+                    max-width: 600px;
+                    margin: 20px auto;
+                    background-color: #ffffff;
+                    padding: 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                }}
+                h1 {{
+                    text-align: center;
+                    color: #333333;
+                }}
+                p {{
+                    color: #666666;
+                }}
+                .btn {{
+                    display: inline-block;
+                    background-color: #007bff;
+                    color: #ffffff;
+                    text-decoration: none;
+                    padding: 10px 20px;
+                    border-radius: 5px;
+                    transition: background-color 0.3s;
+                }}
+                .btn:hover {{
+                    background-color: #0056b3;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>Thank You for Registering!</h1>
+                <p>
+                Dear {tl_roll},<br>
+
+We hope this message finds you well!
+
+We wanted to take a moment to express our sincere gratitude for registering for our upcoming event, {event}. Your interest and commitment mean a great deal to us, and we are thrilled to have you join us.
+
+Your participation will undoubtedly enrich our event, and we're looking forward to sharing valuable insights and experiences together.
+
+Should you have any questions or need further information before the event, please don't hesitate to reach out to us. We're here to assist you in any way we can.
+
+Once again, thank you for your registration, and we eagerly anticipate seeing you at {event}!
+
+Best regards,</p>
+            </div>
+        </body>
+        </html>
+        """
+        subject="Thank You for Registering!"
+        to=tl_email
+        send_email(html=html,subject=subject,to=to)
 
         return redirect(url_for('views.home'))
 
