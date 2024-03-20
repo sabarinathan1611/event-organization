@@ -9,8 +9,6 @@ Dynamic Event host
 
 2. **Navigate to the Project Directory:**
 
-   ```bash
-    cd HR_Management
 
 3. **Create a Virtual Environment (Optional but Recommended):**
     ```bash
