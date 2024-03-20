@@ -2,10 +2,10 @@
 Dynamic Event host 
 ## Installation
 
-1. Clone this repository:
+1. Clone this repository or Download The ZIP file:
 
    ```bash
-   git clone https://github.com/sabarinathan1611/HR_Management.git
+   git clone https://github.com/sabarinathan1611/event-organization.git
 
 2. **Navigate to the Project Directory:**
 
